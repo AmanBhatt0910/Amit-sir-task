@@ -11,9 +11,31 @@ const TopicsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+
     const fetchTopics = async () => {
       try {
-        let url = "http://localhost:3000/api/topics/search";
+        let url = "http://localhost:3000/api/topics/";
+        // Append query parameters based on selected sorting option and search term
+        const res = await fetch(url, {
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          throw new Error("Failed to fetch topics");
+        }
+        const data = await res.json();
+        setTopics(data.topics);
+      } catch (error) {
+        console.log("Error loading topics: ", error);
+      }
+    };
+    fetchTopics();
+
+  }, [])
+
+  useEffect(() => {
+    const searchAndFilter = async () => {
+      try {
+        let url = "http://localhost:3000/api/topics/search/";
         // Append query parameters based on selected sorting option and search term
         let queryParams = [];
         if (sortBy !== 'default') {
@@ -46,7 +68,7 @@ const TopicsList = () => {
       }
     };
 
-    fetchTopics();
+    searchAndFilter();
   }, [sortBy, searchTerm]); // Fetch topics whenever sorting option or search term changes
 
   const handleSortChange = (event) => {

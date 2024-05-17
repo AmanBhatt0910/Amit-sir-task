@@ -1,6 +1,6 @@
-import connectMongoDB from "../../../libs/mongodb";
-import Topic from "../../../model/topic";
 import { NextResponse } from "next/server";
+import { connectMongoDB } from "../../../libs/mongodb";
+import { Topic } from "../../../model/topic";
 
 // API Request to create
 export async function POST(request) {
@@ -17,6 +17,7 @@ export async function POST(request) {
 export async function GET() {
     await connectMongoDB();
     const topics = await Topic.find();
+    console.log(topics)
     return NextResponse.json({topics});
 }
 
